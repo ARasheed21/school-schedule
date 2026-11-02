@@ -13,7 +13,25 @@ table{border-collapse:collapse}td,th{border:1px solid var(--bd);padding:3px 6px;
 td.n{text-align:right}td.e{cursor:pointer}td.e:hover{outline:2px solid var(--ac)}td.m{background:var(--hd);font-weight:bold}
 .chip{display:inline-block;margin:2px;padding:2px 8px;border:1px solid var(--bd);border-radius:12px;background:var(--card)}.chip button{padding:0 4px;border:0}
 .bad{background:#ffcdd2!important;color:#b71c1c!important;font-weight:bold}tr.bad td{background:#ffcdd2}.ok{background:#e8f5e9;border:1px solid #2e7d32;color:#1b5e20;padding:8px;border-radius:6px;margin:8px 0}
-.xd{background:#e0e0e0}.mn{font-size:11px}.kpi{display:inline-block;margin:4px;padding:6px 12px;border:1px solid var(--bd);border-radius:8px;background:#fff;text-align:center}.kpi b{display:block;font-size:18px}.am{background:#fff3e0}
+.xd{background:#e0e0e0}.mn{font-size:11px}
+.supw{max-height:68vh;overflow:auto;border:1px solid var(--bd);border-radius:6px;background:#fff}
+table.sm{border-collapse:separate;border-spacing:0}
+table.sm th,table.sm td{border:0;border-bottom:1px solid var(--bd);border-left:1px solid var(--bd);padding:1px 2px;background:#fff;text-align:center}
+table.sm th{background:var(--hd);position:sticky;z-index:2;font-size:12px}
+table.sm tr.h1 th{top:0;height:22px}table.sm tr.h2 th{top:22px;height:112px}table.sm tr.h3 th{top:134px;height:46px}
+table.sm th.sb span,table.sm th.mn span{writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;display:inline-block}
+table.sm .c0{position:sticky;right:0;z-index:3;text-align:right;min-width:130px;background:#fff;border-left:2px solid #9aa5b1}
+table.sm th.c0{top:0;z-index:6;background:var(--hd)}
+table.sm td.k{width:24px;padding:1px 0}table.sm td.xd{background:#e0e0e0}
+table.sm tr.m td{background:var(--hd);font-weight:bold}table.sm tr.m td.bad{background:#ffcdd2}
+.note{font-size:12px;color:#555;margin-top:4px}
+#mat,#sum{overflow-x:auto}
+#mat table,#sum table{border-collapse:separate;border-spacing:0;border-top:1px solid var(--bd);border-right:1px solid var(--bd)}
+#mat td,#mat th,#sum td,#sum th{border:0;border-bottom:1px solid var(--bd);border-left:1px solid var(--bd)}
+#mat tr>:nth-child(1),#sum tr>:nth-child(1){position:sticky;right:0;z-index:2;width:34px;min-width:34px;max-width:34px;background:#fff}
+#mat tr>:nth-child(2),#sum tr>:nth-child(2){position:sticky;right:34px;z-index:2;min-width:150px;background:#fff;border-left:2px solid #9aa5b1}
+#mat th:nth-child(1),#mat th:nth-child(2),#sum th:nth-child(1),#sum th:nth-child(2),#sum tr.m>:nth-child(1),#sum tr.m>:nth-child(2){background:var(--hd)}
+#mat th:nth-child(1),#mat th:nth-child(2),#sum th:nth-child(1),#sum th:nth-child(2){z-index:3}.kpi{display:inline-block;margin:4px;padding:6px 12px;border:1px solid var(--bd);border-radius:8px;background:#fff;text-align:center}.kpi b{display:block;font-size:18px}.am{background:#fff3e0}
 #print{display:none}
 @media print{#app{display:none}#print{display:block}body{background:#fff;color:#000}
 .sheet{page-break-after:always;color:#000;background:#fff;font-size:13px}.sheet table{width:100%}.sheet td,.sheet th{border:1px solid #000;color:#000;background:#fff;white-space:normal}.sheet h3{text-align:center;margin:8px}.sheet .c{text-align:center}
@@ -279,18 +297,33 @@ if(typeof module!=='undefined')module.exports={buildXlsx};
 </script><script>
 if(typeof document!=='undefined'){
 const $=s=>document.querySelector(s);let ER=[],BAD=[],V=[],vi=0,A=null,Q={},AB=[],RQ=[],sig='',cur=null;
-const sg=()=>JSON.stringify([SES.map(s=>s.date+s.sub),T.map(t=>t.n+t.s+t.sr),SES.map((_,s)=>supNames(s)),SES.map((_,s)=>exNames(s))]);let SA=new Set();
+const sg=()=>JSON.stringify([SES.map(s=>s.date+s.sub),T.map(t=>t.n+t.s+t.sr).sort(),SES.map((_,s)=>supNames(s)),SES.map((_,s)=>exNames(s))]);let SA=new Set();
 const use=i=>{vi=i;const v=V[i];A=v.A;Q=v.Q;AB=v.AB;RQ=v.RQ;sig=v.sig;cur=null};
 let EK='term',ST={};
 function stash(){ST[EK]={D,SUPN,EXCL,V,vi}}
 function enter(k){EK=k;setExam(k);const s=ST[k]||{};const oldMid=k=='mid'&&s.D&&s.D.length==1&&s.D[0].date=='2026-11-08'&&s.D[0].subs.length==1&&!(s.V&&s.V.length);D=s.D&&s.D.length&&!oldMid?s.D:(k=='mid'?DEFM:DEF).map(x=>({date:x[0],subs:x[1].slice()}));SUPN=s.SUPN||{};EXCL=s.EXCL||{};V=s.V||[];vi=s.vi||0;A=null;cur=null;if(V.length)use(Math.min(vi,V.length-1))}
 function save(){try{stash();localStorage.setItem('obs4',JSON.stringify({T,EK,ST}))}catch(e){}}
 function load(){try{const d=JSON.parse(localStorage.getItem('obs4'));if(d&&d.T){T=d.T;if(d.ST){ST=d.ST;EK=d.EK||'term'}else if(d.D){ST={term:{D:d.D,SUPN:d.SUPN||{},V:d.V||[],vi:d.vi||0}};EK='term'}if(ST[EK])enter(EK)}}catch(e){}}
+const SUBORD=['اللغة العربية','التربية الدينية','الكيمياء','الميكانيكا','اللغة الثانية','الأحياء','الجيولوجيا','الدراسات','الرياضيات','الحاسب','الفيزياء','اللغة الإنجليزية'];
+const tk=t=>{let m=99;t.s.forEach(x=>{const i=SUBORD.indexOf(x);if(i>-1&&i<m)m=i});return m<99?[m,'']:t.s.length?[50,t.s[0]]:[98,'']};
+function remapAll(old){stash();const used=new Set(),map=old.map(n=>{const j=T.findIndex((t,k)=>t.n===n&&!used.has(k));if(j>-1)used.add(j);return j}),m=v=>v==null?null:(map[v]>-1?map[v]:null);
+ Object.values(ST).forEach(s=>(s.V||[]).forEach(v=>{v.A.forEach(a=>{a.c=a.c.map(p=>p.map(m));a.r=a.r.map(m).filter(x=>x!=null);a.f=a.f.map(m)});
+  const q={};Object.keys(v.Q).forEach(k=>{const j=map[+k];if(j>-1)q[j]=v.Q[k]});v.Q=q;
+  v.RQ=v.RQ.map(m).filter(x=>x!=null);T.forEach((_,k)=>{if(!v.RQ.includes(k))v.RQ.push(k)});
+  v.AB=v.AB.map(b=>({t:m(b.t),di:b.di})).filter(b=>b.t!=null)}));
+ if(V.length)use(Math.min(vi,V.length-1))}
+function sortT(last){const old=T.map(t=>t.n),it=T.map((t,i)=>({t,i}));
+ it.sort((a,b)=>{const x=tk(a.t),y=tk(b.t);return x[0]-y[0]||x[1].localeCompare(y[1],'ar')||((a.t===last)-(b.t===last))||a.i-b.i});
+ const nt=it.map(x=>x.t);if(nt.every((t,k)=>t===T[k]))return false;T=nt;remapAll(old);return true}
 function setup(){
  const subs=[...new Set(T.flatMap(t=>t.s))];$('#sl').innerHTML=subs.map(s=>`<option value="${s}">`).join('');
  $('#days').innerHTML=D.map((d,i)=>`<div class="row"><input type="date" value="${d.date}" data-dd="${i}">${d.subs.map((s,k)=>`<input list="sl" value="${s}" size="14" data-ds="${i}.${k}"><button data-rs="${i}.${k}">×</button>`).join('')}<button data-as="${i}">+ مادة</button><button data-rd="${i}">حذف اليوم</button></div>`).join('');
- $('#tch').innerHTML=`<table><tr><th>الاسم</th><th>المواد</th><th></th></tr>${T.map((t,i)=>`<tr><td><input value="${t.n}" data-tn="${i}"></td><td><input value="${t.s.join('، ')}" size="26" data-ts="${i}"></td><td><button data-td="${i}">حذف</button></td></tr>`).join('')}</table><button id="addt">+ مدرس</button>`;
- $('#nf').textContent=NF;$('#supm').innerHTML=`<table><tr><th rowspan="2">المدرس</th>${SES.map(x=>`<th colspan="2">${x.date}<br>${x.sub}</th>`).join('')}</tr><tr>${SES.map(()=>'<th class="mn">مستبعد</th><th class="mn">مراقب</th>').join('')}</tr>${T.map((t,i)=>`<tr><td class="n">${t.n}</td>${SES.map((x,s)=>{const ex=isEx(i,s);return `<td${ex?' class="xd"':''}><input type="checkbox" data-inc="${i}.${s}"${ex?' checked':''}></td><td${ex?' class="xd"':''}><input type="checkbox" data-sp="${i}.${s}"${ex?' disabled':''}${supIdx(s).includes(i)?' checked':''}></td>`}).join('')}</tr>`).join('')}<tr class="m"><td class="n">عدد المشاركين (غير المستبعدين)</td>${SES.map((x,s)=>`<td colspan="2">${T.length-exNames(s).filter(n=>T.some(t=>t.n===n)).length}</td>`).join('')}</tr><tr class="m"><td class="n">مراقبو الأدوار (المطلوب ${NF} على الأقل؛ الزائد يُستخدم احتياطيًا)</td>${SES.map((x,s)=>{const n=supIdx(s).length;return `<td colspan="2"${n<NF?' class="bad"':''}>${n}</td>`}).join('')}</tr></table>`}
+ $('#tch').innerHTML=`<table><tr><th>الاسم</th><th>المواد</th><th></th></tr>${T.map((t,i)=>`<tr><td><input value="${t.n}" data-tn="${i}"></td><td><input value="${t.s.join('، ')}" size="26" data-ts="${i}"></td><td><button data-td="${i}">حذف</button></td></tr>`).join('')}</table>
+ <div class="row"><b>إضافة مدرس:</b><input id="ntn" placeholder="الاسم" size="20"><input id="nts" list="sl" placeholder="المادة" size="16"><button id="addt">+ إضافة</button></div><div class="note">القائمة مرتّبة حسب المادة؛ يُدرج المدرس الجديد أسفل آخر مدرس في مادته، وعند تغيير مادة مدرس ينتقل إلى آخر مدرسي المادة الجديدة.</div>`;
+ const sw=$('#supm .supw'),pos=sw?[sw.scrollTop,sw.scrollLeft]:null;
+ $('#nf').textContent=NF;
+ $('#supm').innerHTML=`<div class="supw"><table class="sm"><thead><tr class="h1"><th rowspan="3" class="c0">المدرس</th>${SES.map(x=>`<th colspan="2" title="${x.day} ${x.date}">${x.date.slice(0,-5)}</th>`).join('')}</tr><tr class="h2">${SES.map(x=>`<th colspan="2" class="sb"><span>${x.sub}</span></th>`).join('')}</tr><tr class="h3">${SES.map(()=>'<th class="mn"><span>مستبعد</span></th><th class="mn"><span>مراقب</span></th>').join('')}</tr></thead><tbody>${T.map((t,i)=>`<tr><td class="n c0">${t.n}</td>${SES.map((x,s)=>{const ex=isEx(i,s);return `<td class="k${ex?' xd':''}"><input type="checkbox" data-inc="${i}.${s}"${ex?' checked':''}></td><td class="k${ex?' xd':''}"><input type="checkbox" data-sp="${i}.${s}"${ex?' disabled':''}${supIdx(s).includes(i)?' checked':''}></td>`}).join('')}</tr>`).join('')}<tr class="m"><td class="n c0">المشاركون</td>${SES.map((x,s)=>`<td colspan="2">${T.length-exNames(s).filter(n=>T.some(t=>t.n===n)).length}</td>`).join('')}</tr><tr class="m"><td class="n c0">المراقبون (≥ ${NF})</td>${SES.map((x,s)=>{const n=supIdx(s).length;return `<td colspan="2"${n<NF?' class="bad"':''}>${n}</td>`}).join('')}</tr></tbody></table></div><div class="note">الزائد عن المطلوب من المراقبين يُستخدم احتياطيًا عند الحاجة. اسحب داخل الجدول للتمرير؛ اسم المدرس والتاريخ والمادة ثابتة.</div>`;
+ if(pos){const n=$('#supm .supw');n.scrollTop=pos[0];n.scrollLeft=pos[1]}}
 const nm=i=>i==null?'':T[i].n;
 const sel=(p,i,k,v)=>`<select data-p="${p}" data-i="${i}" data-k="${k}"><option value="">—</option>${T.map((t,j)=>`<option value="${j}"${j===v?' selected':''}>${t.n}${SA.has(j)?' (مراقب)':''}</option>`).join('')}</select>`;
 const score=v=>{if(v.sig!==sig)return['—','—'];let w=0;SES.forEach((_,s)=>w+=warn(v.A,v.AB,s).filter(x=>!x.includes('مراقبي')).length);const c={};v.A.forEach(a=>a.c.flat().forEach(i=>i!=null&&(c[i]=(c[i]||0)+1)));let d=0;Object.keys(v.Q).forEach(i=>d=Math.max(d,Math.abs((c[i]||0)-v.Q[i])));return[w,d.toFixed(1)]};
@@ -345,7 +378,7 @@ async function xlsx(){if(ER.some(Boolean)&&!window.confirm(BAD_MSG))return;
 document.addEventListener('change',e=>{const d=e.target.dataset,v=e.target.value;
  if(e.target.name=='ex'){stash();enter(v);build();setup();results();save();return}
  if(d.dd!=null)D[d.dd].date=v;else if(d.ds!=null){const[i,k]=d.ds.split('.');D[i].subs[k]=v}
- else if(d.tn!=null){const o=T[d.tn].n;Object.keys(SUPN).forEach(k=>SUPN[k]=SUPN[k].map(x=>x===o?v.trim():x));Object.keys(EXCL).forEach(k=>EXCL[k]=EXCL[k].map(x=>x===o?v.trim():x));T[d.tn].n=v.trim()}else if(d.ts!=null)T[d.ts].s=v.split(/[,،]/).map(x=>x.trim()).filter(Boolean);else if(d.inc!=null){const[i,s]=d.inc.split('.').map(Number),n=T[i].n,k=skey(s);let l=exNames(s).slice();if(!e.target.checked)l=l.filter(x=>x!==n);else{if(!l.includes(n))l.push(n);SUPN[k]=supNames(s).filter(x=>x!==n)}EXCL[k]=l}
+ else if(d.tn!=null){const o=T[d.tn].n;Object.keys(SUPN).forEach(k=>SUPN[k]=SUPN[k].map(x=>x===o?v.trim():x));Object.keys(EXCL).forEach(k=>EXCL[k]=EXCL[k].map(x=>x===o?v.trim():x));T[d.tn].n=v.trim()}else if(d.ts!=null){const o=T[d.ts];o.s=v.split(/[,،]/).map(x=>x.trim()).filter(Boolean);sortT(o)}else if(d.inc!=null){const[i,s]=d.inc.split('.').map(Number),n=T[i].n,k=skey(s);let l=exNames(s).slice();if(!e.target.checked)l=l.filter(x=>x!==n);else{if(!l.includes(n))l.push(n);SUPN[k]=supNames(s).filter(x=>x!==n)}EXCL[k]=l}
  else if(d.sp!=null){const[i,s]=d.sp.split('.').map(Number);let l=supNames(s).slice();const n=T[i].n;if(e.target.checked){if(!l.includes(n))l.push(n)}else l=l.filter(x=>x!==n);SUPN[skey(s)]=l}
  else if(d.cp!=null){const[t,s]=d.cp.split('.').map(Number);let lg=[];if(v=='ab')lg=absent(A,AB,RQ,t,SES[s].di);else if(v=='ex'){const n=T[t].n,k=skey(s);place(A,RQ,t,s,'');if(!isEx(t,s)){EXCL[k]=exNames(s).concat([n]);SUPN[k]=supNames(s).filter(x=>x!==n);sig=sg();V[vi].sig=sig;setup()}}else place(A,RQ,t,s,v);save();results();$('#abm').innerHTML=lg.join('<br>');return}
  else if(d.p){const a=A[cur],n=v===''?null:+v;if(d.p=='c')a.c[d.i][d.k]=n;else if(d.p=='r'){a.r[d.i]=n;if(n!=null)toEnd(A,RQ,n,cur)}else a.f[d.i]=n;save();results();return}
@@ -354,9 +387,9 @@ document.addEventListener('click',e=>{const d=e.target.dataset,id=e.target.id;
  if(d.rs!=null){const[i,k]=d.rs.split('.');D[i].subs.splice(k,1);setup();refresh()}
  else if(d.as!=null){D[d.as].subs.push('');setup()}
  else if(d.rd!=null){D.splice(d.rd,1);setup();refresh()}
- else if(d.td!=null){T.splice(d.td,1);setup();refresh()}
+ else if(d.td!=null){const old=T.map(x=>x.n);T.splice(d.td,1);remapAll(old);setup();refresh()}
  else if(id=='addday'){D.push({date:'',subs:['']});setup()}
- else if(id=='addt'){T.push({n:'مدرس جديد',s:[],sr:0});setup();refresh()}
+ else if(id=='addt'){const n=($('#ntn').value||'').trim()||'مدرس جديد',s=($('#nts').value||'').split(/[,،]/).map(x=>x.trim()).filter(Boolean),old=T.map(x=>x.n),o={n,s,sr:0};T.push(o);remapAll(old);sortT(o);setup();refresh()}
  else if(d.hs!=null){cur=+d.hs;edit();$('#ed').scrollIntoView()}
  else if(d.t!=null&&e.target.tagName=='TD'){const t=+d.t,s=+d.s;
   const a=A[s],ci=a.c.findIndex(p=>p.includes(t)),fi=a.f.indexOf(t),cv=ci>-1?'c'+ci:a.r.includes(t)?'r':fi>-1?'f'+fi:AB.some(b=>b.t==t&&b.di==SES[s].di)?'ab':isEx(t,s)?'ex':'';
@@ -371,6 +404,6 @@ document.addEventListener('click',e=>{const d=e.target.dataset,id=e.target.id;
  else if(id=='regen'){if(!SES.length)return alert('أضف تاريخًا ومادة واحدة على الأقل');build();const g=gen();V=V.filter(v=>v.sig===sg());V.push({A:g.A,Q:g.Q,AB:[],RQ:g.RQ,sig:sg()});use(V.length-1);save();results();$('#setup').open=false}
  else if(id=='w1')word([cur],'كشف_ملاحظة_'+XT()+'_'+SES[cur].date.replace(/\//g,'-')+'.docx');else if(id=='wd')word(SES.map((_,i)=>i),'كشوف_الملاحظة_'+XT()+'_نسخة'+(vi+1)+'.docx');else if(id=='xl')xlsx();
  else if(id=='ab'){const lg=absent(A,AB,RQ,+$('#at').value,+$('#ad').value);save();results();$('#abm').innerHTML=lg.join('<br>')||'تم تسجيل الغياب'}});
-load();if(!D.length)enter(EK);build();setup();results();document.querySelector('input[name=ex][value='+EK+']').checked=true;
+load();if(!D.length)enter(EK);if(sortT())save();build();setup();results();document.querySelector('input[name=ex][value='+EK+']').checked=true;
 }
 </script></body></html>
